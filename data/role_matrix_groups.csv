@@ -1,0 +1,28 @@
+job_title,group_name
+General Manager,All-Staff
+General Manager,Leadership
+General Manager,Finance-Approvers
+Bookkeeper,All-Staff
+Bookkeeper,Finance-Approvers
+AP Clerk,All-Staff
+AP Clerk,Finance-AP
+IT Coordinator,All-Staff
+IT Coordinator,IT-Admins
+IT Coordinator,Domain Admins
+HR Coordinator,All-Staff
+HR Coordinator,HR
+Marketing Coordinator,All-Staff
+Marketing Coordinator,Marketing
+Store Manager,All-Staff
+Store Manager,Store-Staff
+Store Manager,Store-Mgmt
+Assistant Manager,All-Staff
+Assistant Manager,Store-Staff
+Assistant Manager,Store-Mgmt
+Team Leader,All-Staff
+Team Leader,Store-Staff
+Sales Associate,All-Staff
+Sales Associate,Store-Staff
+Buyer,All-Staff
+Buyer,Store-Staff
+Buyer,Inventory

@@ -1,0 +1,22 @@
+Access review as of 2026-10-31: 11 findings (4 High, 4 Medium, 3 Low)
+  A1 [High] a-tbrooks (Directory): No MFA while in Domain Admins
+  A2 [High] avery.mills (Directory): Terminated 2026-08-15 but account still enabled; Signed in 2026-09-02, after termination  [POSSIBLE INCIDENT]
+  A3 [High] marcus.reyes (Directory): In both Finance-AP and Finance-Approvers (can create and approve the same transaction)
+  A4 [High] temp.it.vendor (Directory): Vendor account with no named owner; Vendor account created 2026-02-03, past the 90-day limit; No MFA while in IT-Admins; No sign-in since 2026-05-14
+  A5 [Medium] jasmine.ortiz (Directory): Still in Finance-AP from a previous job
+  A6 [Medium] nina.patel (POS): Terminated 2026-09-30 but POS login still enabled (Supervisor rights)
+  A7 [Medium] store3.register (POS): Shared login with no employee attached
+  A8 [Medium] taylor.nguyen (POS): POS role is Manager; role matrix allows Cashier for Sales Associate
+  A9 [Low] chris.dunn.s2 (POS): Still has a login at Store 2 - Watkinsville after transferring; No POS login since 2026-06-28
+  A10 [Low] kayla.brooks (and any POS login) (Directory and POS): On leave with access still enabled; policy has no rule for leave
+  A11 [Low] logan.price (Directory): No sign-in since 2026-06-20
+
+Checked and cleared:
+  - sam.okafor: never signed in, but created 2026-10-27 (inside 30-day grace)
+  - nina.patel: terminated 2026-09-30, directory account disabled
+  - mia.lopez: terminated 2026-04-10, directory account disabled
+  - svc.backup: service account with documented owner E1004
+  - avery.mills: terminated 2026-08-15, POS login disabled
+  - mia.lopez: terminated 2026-04-10, POS login disabled
+
+Findings written to findings/automated_findings.csv

@@ -1,0 +1,12 @@
+finding_id,account_or_person,system,what_is_wrong,policy_rule_broken,severity,recommended_fix
+F1,avery.mills,Directory,"Terminated Aug 15 but account still enabled; signed in Sep 2, after termination",Rule 2: Terminations,High,Disable now; investigate the Sep 2 sign-in as a possible security incident
+F2,nina.patel,POS,Terminated Sep 30 but POS login still enabled with supervisor rights,Rule 2: Terminations,Medium,Disable POS login now; add POS to the termination checklist
+F3,jasmine.ortiz,Directory,Moved from AP Clerk to Marketing on Jun 1 but still in Finance-AP (can set up vendors and enter invoices),Rule 3: Job changes,Medium,Remove from Finance-AP; have HR job changes trigger an access update
+F4,chris.dunn.s2,POS,Transferred from Store 2 to Store 1 on Jul 1 but Store 2 POS login still enabled; unused since Jun 28,Rule 3: Job changes; Rule 4: Inactive accounts,Low,Disable the Store 2 login
+F5,marcus.reyes,Directory,"Bookkeeper is in both Finance-AP and Finance-Approvers, so he can create and approve the same payment",Rule 9: Separation of duties,High,Remove Finance-AP; review recent payments he both entered and approved
+F6,taylor.nguyen,POS,"Sales Associate has Manager POS role (can approve voids, refunds and overrides); role matrix allows Cashier",Rule 1: Least privilege,Medium,Downgrade to Cashier; review refunds and voids approved under this login
+F7,temp.it.vendor,Directory,"Vendor account with no owner, in IT-Admins, no MFA, unused since May 14, created Feb 3 (past the 90-day vendor limit)",Rule 4; Rule 5; Rule 8,High,Disable now; confirm with IT which vendor it belonged to and whether the engagement ended
+F8,a-tbrooks,Directory,Domain Admins account without MFA,Rule 5: MFA,High,Turn on MFA before the next sign-in
+F9,store3.register,POS,Shared register login with no employee attached; used Oct 29,Rule 7: Shared accounts,Medium,Disable; give each Store 3 employee their own login
+F10,logan.price,Directory,Active Buyer's login unused since Jun 20 (133 days),Rule 4: Inactive accounts,Low,Disable; re-enable on request
+F11,kayla.brooks,Directory and POS,On leave since Sep 15 (returning Jan 4) with both logins still enabled; policy has no rule for leave,Policy gap,Low,Add a leave rule (suspend access during leave over 30 days); suspend Kayla's access until she returns

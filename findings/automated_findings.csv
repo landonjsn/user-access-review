@@ -1,0 +1,12 @@
+finding_id,account,system,what_is_wrong,policy_rule,suggested_severity,possible_incident
+A1,a-tbrooks,Directory,No MFA while in Domain Admins,Rule 5: MFA,High,No
+A2,avery.mills,Directory,"Terminated 2026-08-15 but account still enabled; Signed in 2026-09-02, after termination",Rule 2: Terminations,High,Yes
+A3,marcus.reyes,Directory,In both Finance-AP and Finance-Approvers (can create and approve the same transaction),Rule 9: Separation of duties,High,No
+A4,temp.it.vendor,Directory,"Vendor account with no named owner; Vendor account created 2026-02-03, past the 90-day limit; No MFA while in IT-Admins; No sign-in since 2026-05-14",Rule 8: Service and vendor accounts; Rule 5: MFA; Rule 4: Inactive accounts,High,No
+A5,jasmine.ortiz,Directory,Still in Finance-AP from a previous job,Rule 3: Job changes,Medium,No
+A6,nina.patel,POS,Terminated 2026-09-30 but POS login still enabled (Supervisor rights),Rule 2: Terminations,Medium,No
+A7,store3.register,POS,Shared login with no employee attached,Rule 7: Shared accounts,Medium,No
+A8,taylor.nguyen,POS,POS role is Manager; role matrix allows Cashier for Sales Associate,Rule 1: Least privilege,Medium,No
+A9,chris.dunn.s2,POS,Still has a login at Store 2 - Watkinsville after transferring; No POS login since 2026-06-28,Rule 3: Job changes; Rule 4: Inactive accounts,Low,No
+A10,kayla.brooks (and any POS login),Directory and POS,On leave with access still enabled; policy has no rule for leave,Policy gap,Low,No
+A11,logan.price,Directory,No sign-in since 2026-06-20,Rule 4: Inactive accounts,Low,No

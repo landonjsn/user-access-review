@@ -1,0 +1,32 @@
+pos_user_id,pos_username,employee_id,store,pos_role,enabled,last_login
+P2001,kevin.lambert,E1101,Store 1 - Athens,Manager,Yes,2026-10-17 14:05
+P2002,alicia.grant,E1102,Store 1 - Athens,Manager,Yes,2026-10-25 07:55
+P2003,chris.dunn,E1103,Store 1 - Athens,Supervisor,Yes,2026-10-04 09:40
+P2004,chris.dunn.s2,E1103,Store 2 - Watkinsville,Supervisor,Yes,2026-06-28 18:20
+P2005,morgan.ellis,E1104,Store 1 - Athens,Supervisor,Yes,2026-10-06 19:43
+P2006,jordan.pike,E1105,Store 1 - Athens,Cashier,Yes,2026-10-14 16:04
+P2007,taylor.nguyen,E1106,Store 1 - Athens,Manager,Yes,2026-10-13 13:38
+P2008,riley.shaw,E1107,Store 1 - Athens,Cashier,Yes,2026-10-15 15:16
+P2009,sam.okafor,E1108,Store 1 - Athens,Cashier,Yes,
+P2010,avery.mills,E1109,Store 1 - Athens,Cashier,No,2026-08-14 19:40
+P2011,logan.price,E1110,Store 1 - Athens,Cashier,Yes,2026-10-22 15:48
+P2012,rachel.kim,E1201,Store 2 - Watkinsville,Manager,Yes,2026-10-09 19:41
+P2013,ben.carter,E1202,Store 2 - Watkinsville,Manager,Yes,2026-10-11 08:18
+P2014,nina.patel,E1203,Store 2 - Watkinsville,Supervisor,Yes,2026-09-29 20:11
+P2015,omar.haddad,E1204,Store 2 - Watkinsville,Supervisor,Yes,2026-10-01 18:56
+P2016,grace.liu,E1205,Store 2 - Watkinsville,Cashier,Yes,2026-10-24 11:32
+P2017,diego.ramirez,E1206,Store 2 - Watkinsville,Cashier,Yes,2026-10-25 09:32
+P2018,kayla.brooks,E1207,Store 2 - Watkinsville,Cashier,Yes,2026-09-14 16:40
+P2019,noah.fischer,E1208,Store 2 - Watkinsville,Cashier,Yes,2026-10-21 11:53
+P2020,ella.martin,E1209,Store 2 - Watkinsville,Cashier,Yes,2026-10-21 15:38
+P2021,victor.hale,E1301,Store 3 - Gainesville,Manager,Yes,2026-10-07 09:23
+P2022,sophie.turner,E1302,Store 3 - Gainesville,Manager,Yes,2026-10-25 09:34
+P2023,isaac.moore,E1303,Store 3 - Gainesville,Supervisor,Yes,2026-10-25 15:58
+P2024,lily.chen,E1304,Store 3 - Gainesville,Supervisor,Yes,2026-10-01 16:20
+P2025,mason.reed,E1305,Store 3 - Gainesville,Cashier,Yes,2026-10-16 07:07
+P2026,zoe.adams,E1306,Store 3 - Gainesville,Cashier,Yes,2026-10-30 12:56
+P2027,ethan.wright,E1307,Store 3 - Gainesville,Cashier,Yes,2026-10-27 19:19
+P2028,mia.lopez,E1308,Store 3 - Gainesville,Cashier,No,2026-04-09 15:55
+P2029,owen.hughes,E1309,Store 3 - Gainesville,Cashier,Yes,2026-10-29 16:05
+P2030,tyler.brooks,E1004,All Stores,Admin,Yes,2026-10-03 18:31
+P2031,store3.register,,Store 3 - Gainesville,Cashier,Yes,2026-10-29 12:03

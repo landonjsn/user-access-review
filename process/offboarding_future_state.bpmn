@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0"
+  id="Defs_RedbudFuture" targetNamespace="http://bpmn.io/schema/bpmn">
+
+  <bpmn:collaboration id="Collab_Future">
+    <bpmn:participant id="Pool_Main" name="Redbud Resale Co. - Access Changes (FUTURE STATE)" processRef="Process_Future" />
+    <bpmn:participant id="Pool_Monthly" name="Monthly Access Check" processRef="Process_Monthly" />
+  </bpmn:collaboration>
+
+  <bpmn:process id="Process_Future" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_F">
+      <bpmn:lane id="Lane_F_HR" name="HR">
+        <bpmn:flowNodeRef>Start_Change</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_UpdateRoster</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Svc_Ticket</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gw_Split</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Confirm</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gw_Done</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Done</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_F_IT" name="IT Coordinator">
+        <bpmn:flowNodeRef>Task_ChangeAccess</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gw_Join</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_CloseTicket</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_F_SM" name="Store Manager">
+        <bpmn:flowNodeRef>Task_Physical</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_F_GM" name="General Manager">
+        <bpmn:flowNodeRef>Task_Escalate</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Late</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+
+    <bpmn:startEvent id="Start_Change" name="Employee leaves, changes jobs, or goes on leave"><bpmn:outgoing>F_a</bpmn:outgoing></bpmn:startEvent>
+    <bpmn:task id="Task_UpdateRoster" name="Update HR roster"><bpmn:incoming>F_a</bpmn:incoming><bpmn:outgoing>F_b</bpmn:outgoing></bpmn:task>
+    <bpmn:serviceTask id="Svc_Ticket" name="Access ticket created automatically"><bpmn:incoming>F_b</bpmn:incoming><bpmn:outgoing>F_c</bpmn:outgoing></bpmn:serviceTask>
+    <bpmn:parallelGateway id="Gw_Split"><bpmn:incoming>F_c</bpmn:incoming><bpmn:outgoing>F_d</bpmn:outgoing><bpmn:outgoing>F_e</bpmn:outgoing></bpmn:parallelGateway>
+    <bpmn:task id="Task_ChangeAccess" name="Remove or change computer login, groups, and POS login to match role matrix"><bpmn:incoming>F_d</bpmn:incoming><bpmn:outgoing>F_f</bpmn:outgoing></bpmn:task>
+    <bpmn:task id="Task_Physical" name="Collect keys and badge; change alarm code and safe combo if needed"><bpmn:incoming>F_e</bpmn:incoming><bpmn:outgoing>F_g</bpmn:outgoing></bpmn:task>
+    <bpmn:parallelGateway id="Gw_Join"><bpmn:incoming>F_f</bpmn:incoming><bpmn:incoming>F_g</bpmn:incoming><bpmn:outgoing>F_h</bpmn:outgoing></bpmn:parallelGateway>
+    <bpmn:task id="Task_CloseTicket" name="Close ticket with evidence"><bpmn:incoming>F_h</bpmn:incoming><bpmn:outgoing>F_i</bpmn:outgoing></bpmn:task>
+    <bpmn:task id="Task_Confirm" name="Confirm every item is done"><bpmn:incoming>F_i</bpmn:incoming><bpmn:outgoing>F_j</bpmn:outgoing></bpmn:task>
+    <bpmn:exclusiveGateway id="Gw_Done" name="Done same day?"><bpmn:incoming>F_j</bpmn:incoming><bpmn:outgoing>F_k</bpmn:outgoing><bpmn:outgoing>F_l</bpmn:outgoing></bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_Done" name="Access removed and documented"><bpmn:incoming>F_k</bpmn:incoming></bpmn:endEvent>
+    <bpmn:task id="Task_Escalate" name="Escalate and track to closure"><bpmn:incoming>F_l</bpmn:incoming><bpmn:outgoing>F_m</bpmn:outgoing></bpmn:task>
+    <bpmn:endEvent id="End_Late" name="Closed late, logged as exception"><bpmn:incoming>F_m</bpmn:incoming></bpmn:endEvent>
+
+    <bpmn:sequenceFlow id="F_a" sourceRef="Start_Change" targetRef="Task_UpdateRoster" />
+    <bpmn:sequenceFlow id="F_b" sourceRef="Task_UpdateRoster" targetRef="Svc_Ticket" />
+    <bpmn:sequenceFlow id="F_c" sourceRef="Svc_Ticket" targetRef="Gw_Split" />
+    <bpmn:sequenceFlow id="F_d" sourceRef="Gw_Split" targetRef="Task_ChangeAccess" />
+    <bpmn:sequenceFlow id="F_e" sourceRef="Gw_Split" targetRef="Task_Physical" />
+    <bpmn:sequenceFlow id="F_f" sourceRef="Task_ChangeAccess" targetRef="Gw_Join" />
+    <bpmn:sequenceFlow id="F_g" sourceRef="Task_Physical" targetRef="Gw_Join" />
+    <bpmn:sequenceFlow id="F_h" sourceRef="Gw_Join" targetRef="Task_CloseTicket" />
+    <bpmn:sequenceFlow id="F_i" sourceRef="Task_CloseTicket" targetRef="Task_Confirm" />
+    <bpmn:sequenceFlow id="F_j" sourceRef="Task_Confirm" targetRef="Gw_Done" />
+    <bpmn:sequenceFlow id="F_k" name="Yes" sourceRef="Gw_Done" targetRef="End_Done" />
+    <bpmn:sequenceFlow id="F_l" name="No" sourceRef="Gw_Done" targetRef="Task_Escalate" />
+    <bpmn:sequenceFlow id="F_m" sourceRef="Task_Escalate" targetRef="End_Late" />
+
+    <bpmn:textAnnotation id="Fix1"><bpmn:text>Fixes Gaps 1 and 3: any roster change (leaving, job change, or leave) creates an IT ticket automatically. No more email.</bpmn:text></bpmn:textAnnotation>
+    <bpmn:textAnnotation id="Fix2"><bpmn:text>Fixes Gap 2: the checklist covers every system, including POS. Job changes are matched to the role matrix.</bpmn:text></bpmn:textAnnotation>
+    <bpmn:textAnnotation id="Fix3"><bpmn:text>New: physical access is part of offboarding (keys, badge, alarm code, safe combo).</bpmn:text></bpmn:textAnnotation>
+    <bpmn:textAnnotation id="Fix4"><bpmn:text>Fixes Gap 4: HR confirms every item is done. Anything not done the same day is escalated.</bpmn:text></bpmn:textAnnotation>
+    <bpmn:association id="A_Fix1" sourceRef="Fix1" targetRef="Svc_Ticket" />
+    <bpmn:association id="A_Fix2" sourceRef="Fix2" targetRef="Task_ChangeAccess" />
+    <bpmn:association id="A_Fix3" sourceRef="Fix3" targetRef="Task_Physical" />
+    <bpmn:association id="A_Fix4" sourceRef="Fix4" targetRef="Gw_Done" />
+  </bpmn:process>
+
+  <bpmn:process id="Process_Monthly" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_M">
+      <bpmn:lane id="Lane_M_HR" name="HR">
+        <bpmn:flowNodeRef>Start_Monthly</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Compare</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gw_Mismatch</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_None</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_M_IT" name="IT Coordinator">
+        <bpmn:flowNodeRef>Task_Fix</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_M_GM" name="General Manager">
+        <bpmn:flowNodeRef>Task_SignOff</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Signed</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Start_Monthly" name="Every month"><bpmn:outgoing>M_a</bpmn:outgoing><bpmn:timerEventDefinition id="Timer_1" /></bpmn:startEvent>
+    <bpmn:task id="Task_Compare" name="Compare HR roster to account and POS lists"><bpmn:incoming>M_a</bpmn:incoming><bpmn:outgoing>M_b</bpmn:outgoing></bpmn:task>
+    <bpmn:exclusiveGateway id="Gw_Mismatch" name="Mismatches?"><bpmn:incoming>M_b</bpmn:incoming><bpmn:outgoing>M_c</bpmn:outgoing><bpmn:outgoing>M_d</bpmn:outgoing></bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_None" name="No action needed"><bpmn:incoming>M_c</bpmn:incoming></bpmn:endEvent>
+    <bpmn:task id="Task_Fix" name="Fix every mismatch"><bpmn:incoming>M_d</bpmn:incoming><bpmn:outgoing>M_e</bpmn:outgoing></bpmn:task>
+    <bpmn:task id="Task_SignOff" name="Review results and sign off"><bpmn:incoming>M_e</bpmn:incoming><bpmn:outgoing>M_f</bpmn:outgoing></bpmn:task>
+    <bpmn:endEvent id="End_Signed" name="Check documented"><bpmn:incoming>M_f</bpmn:incoming></bpmn:endEvent>
+    <bpmn:sequenceFlow id="M_a" sourceRef="Start_Monthly" targetRef="Task_Compare" />
+    <bpmn:sequenceFlow id="M_b" sourceRef="Task_Compare" targetRef="Gw_Mismatch" />
+    <bpmn:sequenceFlow id="M_c" name="No" sourceRef="Gw_Mismatch" targetRef="End_None" />
+    <bpmn:sequenceFlow id="M_d" name="Yes" sourceRef="Gw_Mismatch" targetRef="Task_Fix" />
+    <bpmn:sequenceFlow id="M_e" sourceRef="Task_Fix" targetRef="Task_SignOff" />
+    <bpmn:sequenceFlow id="M_f" sourceRef="Task_SignOff" targetRef="End_Signed" />
+    <bpmn:textAnnotation id="Fix5"><bpmn:text>Detective control: catches anything the main process misses. HR runs the check, not IT, so IT is not checking its own work.</bpmn:text></bpmn:textAnnotation>
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="Diagram_F">
+    <bpmndi:BPMNPlane id="Plane_F" bpmnElement="Collab_Future">
+      <bpmndi:BPMNShape id="Pool_Main_di" bpmnElement="Pool_Main" isHorizontal="true"><dc:Bounds x="150" y="80" width="1500" height="700" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_F_HR_di" bpmnElement="Lane_F_HR" isHorizontal="true"><dc:Bounds x="180" y="80" width="1470" height="200" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_F_IT_di" bpmnElement="Lane_F_IT" isHorizontal="true"><dc:Bounds x="180" y="280" width="1470" height="180" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_F_SM_di" bpmnElement="Lane_F_SM" isHorizontal="true"><dc:Bounds x="180" y="460" width="1470" height="160" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_F_GM_di" bpmnElement="Lane_F_GM" isHorizontal="true"><dc:Bounds x="180" y="620" width="1470" height="160" /></bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Start_Change_di" bpmnElement="Start_Change"><dc:Bounds x="230" y="142" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="195" y="182" width="106" height="40" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_UpdateRoster_di" bpmnElement="Task_UpdateRoster"><dc:Bounds x="300" y="120" width="120" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Svc_Ticket_di" bpmnElement="Svc_Ticket" bioc:stroke="#2e7d32" bioc:fill="#e8f5e9"><dc:Bounds x="450" y="120" width="120" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gw_Split_di" bpmnElement="Gw_Split"><dc:Bounds x="605" y="135" width="50" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ChangeAccess_di" bpmnElement="Task_ChangeAccess" bioc:stroke="#2e7d32" bioc:fill="#e8f5e9"><dc:Bounds x="700" y="330" width="120" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Physical_di" bpmnElement="Task_Physical" bioc:stroke="#2e7d32" bioc:fill="#e8f5e9"><dc:Bounds x="700" y="500" width="120" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gw_Join_di" bpmnElement="Gw_Join"><dc:Bounds x="855" y="345" width="50" height="50" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CloseTicket_di" bpmnElement="Task_CloseTicket"><dc:Bounds x="940" y="330" width="120" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Confirm_di" bpmnElement="Task_Confirm" bioc:stroke="#2e7d32" bioc:fill="#e8f5e9"><dc:Bounds x="1080" y="120" width="120" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gw_Done_di" bpmnElement="Gw_Done" isMarkerVisible="true"><dc:Bounds x="1225" y="135" width="50" height="50" /><bpmndi:BPMNLabel><dc:Bounds x="1210" y="105" width="80" height="14" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Done_di" bpmnElement="End_Done"><dc:Bounds x="1332" y="142" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="1310" y="100" width="80" height="27" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Escalate_di" bpmnElement="Task_Escalate"><dc:Bounds x="1190" y="660" width="120" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Late_di" bpmnElement="End_Late"><dc:Bounds x="1352" y="682" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="1330" y="722" width="80" height="27" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Fix1_di" bpmnElement="Fix1" bioc:stroke="#2e7d32"><dc:Bounds x="300" y="212" width="290" height="60" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Fix2_di" bpmnElement="Fix2" bioc:stroke="#2e7d32"><dc:Bounds x="300" y="320" width="290" height="60" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Fix3_di" bpmnElement="Fix3" bioc:stroke="#2e7d32"><dc:Bounds x="920" y="495" width="270" height="55" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Fix4_di" bpmnElement="Fix4" bioc:stroke="#2e7d32"><dc:Bounds x="1300" y="205" width="330" height="55" /></bpmndi:BPMNShape>
+
+      <bpmndi:BPMNEdge id="F_a_di" bpmnElement="F_a"><di:waypoint x="266" y="160" /><di:waypoint x="300" y="160" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_b_di" bpmnElement="F_b"><di:waypoint x="420" y="160" /><di:waypoint x="450" y="160" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_c_di" bpmnElement="F_c"><di:waypoint x="570" y="160" /><di:waypoint x="605" y="160" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_d_di" bpmnElement="F_d"><di:waypoint x="655" y="160" /><di:waypoint x="760" y="160" /><di:waypoint x="760" y="330" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_e_di" bpmnElement="F_e"><di:waypoint x="630" y="185" /><di:waypoint x="630" y="540" /><di:waypoint x="700" y="540" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_f_di" bpmnElement="F_f"><di:waypoint x="820" y="370" /><di:waypoint x="855" y="370" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_g_di" bpmnElement="F_g"><di:waypoint x="820" y="540" /><di:waypoint x="880" y="540" /><di:waypoint x="880" y="395" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_h_di" bpmnElement="F_h"><di:waypoint x="905" y="370" /><di:waypoint x="940" y="370" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_i_di" bpmnElement="F_i"><di:waypoint x="1060" y="370" /><di:waypoint x="1140" y="370" /><di:waypoint x="1140" y="200" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_j_di" bpmnElement="F_j"><di:waypoint x="1200" y="160" /><di:waypoint x="1225" y="160" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_k_di" bpmnElement="F_k"><di:waypoint x="1275" y="160" /><di:waypoint x="1332" y="160" /><bpmndi:BPMNLabel><dc:Bounds x="1290" y="163" width="20" height="14" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_l_di" bpmnElement="F_l"><di:waypoint x="1250" y="185" /><di:waypoint x="1250" y="660" /><bpmndi:BPMNLabel><dc:Bounds x="1228" y="290" width="18" height="14" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_m_di" bpmnElement="F_m"><di:waypoint x="1310" y="700" /><di:waypoint x="1352" y="700" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="A_Fix1_di" bpmnElement="A_Fix1"><di:waypoint x="510" y="212" /><di:waypoint x="510" y="200" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="A_Fix2_di" bpmnElement="A_Fix2"><di:waypoint x="590" y="350" /><di:waypoint x="700" y="360" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="A_Fix3_di" bpmnElement="A_Fix3"><di:waypoint x="920" y="520" /><di:waypoint x="820" y="520" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="A_Fix4_di" bpmnElement="A_Fix4"><di:waypoint x="1300" y="232" /><di:waypoint x="1265" y="175" /></bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNShape id="Pool_Monthly_di" bpmnElement="Pool_Monthly" isHorizontal="true"><dc:Bounds x="150" y="830" width="1500" height="300" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_M_HR_di" bpmnElement="Lane_M_HR" isHorizontal="true"><dc:Bounds x="180" y="830" width="1470" height="100" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_M_IT_di" bpmnElement="Lane_M_IT" isHorizontal="true"><dc:Bounds x="180" y="930" width="1470" height="100" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_M_GM_di" bpmnElement="Lane_M_GM" isHorizontal="true"><dc:Bounds x="180" y="1030" width="1470" height="100" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_Monthly_di" bpmnElement="Start_Monthly"><dc:Bounds x="230" y="862" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="218" y="902" width="60" height="14" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Compare_di" bpmnElement="Task_Compare" bioc:stroke="#2e7d32" bioc:fill="#e8f5e9"><dc:Bounds x="300" y="840" width="120" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gw_Mismatch_di" bpmnElement="Gw_Mismatch" isMarkerVisible="true"><dc:Bounds x="450" y="855" width="50" height="50" /><bpmndi:BPMNLabel><dc:Bounds x="442" y="838" width="66" height="14" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_None_di" bpmnElement="End_None"><dc:Bounds x="550" y="862" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="525" y="902" width="86" height="14" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Fix_di" bpmnElement="Task_Fix"><dc:Bounds x="415" y="940" width="120" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_SignOff_di" bpmnElement="Task_SignOff"><dc:Bounds x="415" y="1040" width="120" height="80" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Signed_di" bpmnElement="End_Signed"><dc:Bounds x="582" y="1062" width="36" height="36" /><bpmndi:BPMNLabel><dc:Bounds x="560" y="1102" width="80" height="14" /></bpmndi:BPMNLabel></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Fix5_di" bpmnElement="Fix5" bioc:stroke="#2e7d32"><dc:Bounds x="700" y="850" width="440" height="55" /></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="M_a_di" bpmnElement="M_a"><di:waypoint x="266" y="880" /><di:waypoint x="300" y="880" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="M_b_di" bpmnElement="M_b"><di:waypoint x="420" y="880" /><di:waypoint x="450" y="880" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="M_c_di" bpmnElement="M_c"><di:waypoint x="500" y="880" /><di:waypoint x="550" y="880" /><bpmndi:BPMNLabel><dc:Bounds x="515" y="862" width="16" height="14" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="M_d_di" bpmnElement="M_d"><di:waypoint x="475" y="905" /><di:waypoint x="475" y="940" /><bpmndi:BPMNLabel><dc:Bounds x="481" y="912" width="20" height="14" /></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="M_e_di" bpmnElement="M_e"><di:waypoint x="475" y="1020" /><di:waypoint x="475" y="1040" /></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="M_f_di" bpmnElement="M_f"><di:waypoint x="535" y="1080" /><di:waypoint x="582" y="1080" /></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

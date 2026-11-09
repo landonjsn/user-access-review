@@ -1,0 +1,12 @@
+job_title,approved_directory_groups,approved_pos_role
+General Manager,All-Staff; Leadership; Finance-Approvers,None
+Bookkeeper,All-Staff; Finance-Approvers,None
+AP Clerk,All-Staff; Finance-AP,None
+IT Coordinator,All-Staff; IT-Admins; Domain Admins (admin account only),Admin (all stores)
+HR Coordinator,All-Staff; HR,None
+Marketing Coordinator,All-Staff; Marketing,None
+Store Manager,All-Staff; Store-Staff; Store-Mgmt,Manager (own store)
+Assistant Manager,All-Staff; Store-Staff; Store-Mgmt,Manager (own store)
+Team Leader,All-Staff; Store-Staff,Supervisor (own store)
+Sales Associate,All-Staff; Store-Staff,Cashier (own store)
+Buyer,All-Staff; Store-Staff; Inventory,Cashier (own store)

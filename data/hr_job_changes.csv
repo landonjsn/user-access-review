@@ -1,0 +1,6 @@
+employee_id,effective_date,change_type,old_title,new_title,old_location,new_location,notes
+E1006,2026-06-01,Transfer,AP Clerk,Marketing Coordinator,Corporate,Corporate,Moved to Marketing; AP Clerk role backfilled by E1003
+E1103,2026-07-01,Transfer,Team Leader,Team Leader,Store 2 - Watkinsville,Store 1 - Athens,Lateral transfer to Store 1
+E1305,2026-03-02,Rehire,,Sales Associate,,Store 3 - Gainesville,"Rehired; prior employment ended 2025-05-30, prior accounts deleted 2025-06-02"
+E1207,2026-09-15,Leave of Absence,Sales Associate,Sales Associate,Store 2 - Watkinsville,Store 2 - Watkinsville,Approved leave; expected return 2027-01-04
+E1104,2026-02-09,Promotion,Sales Associate,Team Leader,Store 1 - Athens,Store 1 - Athens,Promoted to Team Leader

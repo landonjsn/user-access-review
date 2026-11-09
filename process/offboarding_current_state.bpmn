@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  xmlns:bioc="http://bpmn.io/schema/bpmn/biocolor/1.0"
+  id="Defs_Redbud" targetNamespace="http://bpmn.io/schema/bpmn">
+
+  <bpmn:collaboration id="Collab_Redbud">
+    <bpmn:participant id="Pool_Redbud" name="Redbud Resale Co. - Offboarding and Job Changes (CURRENT STATE, inferred from review evidence)" processRef="Process_Current" />
+  </bpmn:collaboration>
+
+  <bpmn:process id="Process_Current" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_1">
+      <bpmn:lane id="Lane_Manager" name="Store Manager">
+        <bpmn:flowNodeRef>Start_Leaving</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_TellHR</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_HR" name="HR">
+        <bpmn:flowNodeRef>Task_UpdateRoster</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_EmailIT</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Start_JobChange</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_UpdateJob</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_NoIT</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_IT" name="IT Coordinator">
+        <bpmn:flowNodeRef>Task_DisableDirectory</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Done</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+
+    <bpmn:startEvent id="Start_Leaving" name="Employee is leaving">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_TellHR" name="Tell HR the employee is leaving">
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_UpdateRoster" name="Mark employee Terminated in HR roster">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_EmailIT" name="Email IT about the termination">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_DisableDirectory" name="Disable computer (Entra ID) login">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End_Done" name="Offboarding considered done">
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:startEvent id="Start_JobChange" name="Employee changes job or store">
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_UpdateJob" name="Update title or store in HR roster">
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End_NoIT" name="Nothing sent to IT">
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="Start_Leaving" targetRef="Task_TellHR" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_TellHR" targetRef="Task_UpdateRoster" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_UpdateRoster" targetRef="Task_EmailIT" />
+    <bpmn:sequenceFlow id="Flow_4" name="Email (no confirmation)" sourceRef="Task_EmailIT" targetRef="Task_DisableDirectory" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="Task_DisableDirectory" targetRef="End_Done" />
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="Start_JobChange" targetRef="Task_UpdateJob" />
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="Task_UpdateJob" targetRef="End_NoIT" />
+    <bpmn:textAnnotation id="Gap1"><bpmn:text>GAP 1: HR emails IT, but nothing confirms IT got the email or acted on it. (Avery: never disabled, signed in after termination)</bpmn:text></bpmn:textAnnotation>
+    <bpmn:textAnnotation id="Gap2"><bpmn:text>GAP 2: IT only disables the computer login. There is no step for the POS (register) login. (Nina: POS left on)</bpmn:text></bpmn:textAnnotation>
+    <bpmn:textAnnotation id="Gap3"><bpmn:text>GAP 3: Job changes are recorded in HR but never trigger an access change. (Jasmine, Chris)</bpmn:text></bpmn:textAnnotation>
+    <bpmn:textAnnotation id="Gap4"><bpmn:text>No check that every account was actually removed</bpmn:text></bpmn:textAnnotation>
+    <bpmn:association id="Assoc_Gap1" sourceRef="Gap1" targetRef="Task_EmailIT" />
+    <bpmn:association id="Assoc_Gap2" sourceRef="Gap2" targetRef="Task_DisableDirectory" />
+    <bpmn:association id="Assoc_Gap3" sourceRef="Gap3" targetRef="End_NoIT" />
+    <bpmn:association id="Assoc_Gap4" sourceRef="Gap4" targetRef="End_Done" />
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="Diagram_1">
+    <bpmndi:BPMNPlane id="Plane_1" bpmnElement="Collab_Redbud">
+      <bpmndi:BPMNShape id="Pool_Redbud_di" bpmnElement="Pool_Redbud" isHorizontal="true">
+        <dc:Bounds x="150" y="80" width="1180" height="600" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Manager_di" bpmnElement="Lane_Manager" isHorizontal="true">
+        <dc:Bounds x="180" y="80" width="1150" height="150" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_HR_di" bpmnElement="Lane_HR" isHorizontal="true">
+        <dc:Bounds x="180" y="230" width="1150" height="280" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_IT_di" bpmnElement="Lane_IT" isHorizontal="true">
+        <dc:Bounds x="180" y="510" width="1150" height="170" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Start_Leaving_di" bpmnElement="Start_Leaving">
+        <dc:Bounds x="232" y="137" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="215" y="180" width="70" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_TellHR_di" bpmnElement="Task_TellHR">
+        <dc:Bounds x="310" y="115" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_UpdateRoster_di" bpmnElement="Task_UpdateRoster">
+        <dc:Bounds x="460" y="260" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_EmailIT_di" bpmnElement="Task_EmailIT">
+        <dc:Bounds x="620" y="260" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_DisableDirectory_di" bpmnElement="Task_DisableDirectory">
+        <dc:Bounds x="780" y="555" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Done_di" bpmnElement="End_Done">
+        <dc:Bounds x="962" y="577" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="940" y="620" width="80" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_JobChange_di" bpmnElement="Start_JobChange">
+        <dc:Bounds x="232" y="422" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="205" y="465" width="90" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_UpdateJob_di" bpmnElement="Task_UpdateJob">
+        <dc:Bounds x="310" y="400" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_NoIT_di" bpmnElement="End_NoIT" bioc:stroke="#c62828" bioc:fill="#ffebee">
+        <dc:Bounds x="482" y="422" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="460" y="465" width="80" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Gap1_di" bpmnElement="Gap1" bioc:stroke="#c62828">
+        <dc:Bounds x="880" y="250" width="280" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gap2_di" bpmnElement="Gap2" bioc:stroke="#c62828">
+        <dc:Bounds x="420" y="560" width="300" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gap3_di" bpmnElement="Gap3" bioc:stroke="#c62828">
+        <dc:Bounds x="580" y="405" width="290" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gap4_di" bpmnElement="Gap4" bioc:stroke="#c62828">
+        <dc:Bounds x="1050" y="565" width="230" height="60" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="268" y="155" /><di:waypoint x="310" y="155" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="430" y="155" /><di:waypoint x="520" y="155" /><di:waypoint x="520" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="580" y="300" /><di:waypoint x="620" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4" bioc:stroke="#c62828">
+        <di:waypoint x="740" y="300" /><di:waypoint x="840" y="300" /><di:waypoint x="840" y="555" />
+        <bpmndi:BPMNLabel><dc:Bounds x="850" y="335" width="80" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
+        <di:waypoint x="900" y="595" /><di:waypoint x="962" y="595" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6">
+        <di:waypoint x="268" y="440" /><di:waypoint x="310" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7">
+        <di:waypoint x="430" y="440" /><di:waypoint x="482" y="440" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Assoc_Gap1_di" bpmnElement="Assoc_Gap1">
+        <di:waypoint x="880" y="285" /><di:waypoint x="740" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_Gap2_di" bpmnElement="Assoc_Gap2">
+        <di:waypoint x="720" y="595" /><di:waypoint x="780" y="595" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_Gap3_di" bpmnElement="Assoc_Gap3">
+        <di:waypoint x="580" y="440" /><di:waypoint x="518" y="440" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Assoc_Gap4_di" bpmnElement="Assoc_Gap4">
+        <di:waypoint x="1050" y="595" /><di:waypoint x="998" y="595" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
