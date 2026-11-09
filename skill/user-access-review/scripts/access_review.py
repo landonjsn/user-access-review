@@ -174,9 +174,17 @@ def main():
             if a["account_type"] == "Vendor":
                 created = to_date(a["created_date"])
                 if created and (review_date - created).days > VENDOR_MAX_DAYS:
+                    expiry = created + timedelta(days=VENDOR_MAX_DAYS)
                     findings.add(key, user, "Directory",
-                                 f"Vendor account created {created}, past the {VENDOR_MAX_DAYS}-day limit",
+                                 f"Vendor account created {created}, past the {VENDOR_MAX_DAYS}-day limit (ended {expiry})",
                                  "Rule 8: Service and vendor accounts", "Medium")
+                    # Added after testing: use after the limit means someone used an account
+                    # that should already have been off, the same as a login after termination.
+                    last = to_date(a["last_sign_in"])
+                    if last and last > expiry:
+                        findings.add(key, user, "Directory",
+                                     f"Signed in {last}, after the vendor limit ended",
+                                     "Rule 8: Service and vendor accounts", "High", incident=True)
 
         # Leave of absence: the policy is silent, so this is a gap, not a violation
         if person and person["status"] == "Leave of Absence":

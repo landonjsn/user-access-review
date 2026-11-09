@@ -30,7 +30,7 @@ If the column names differ from what `scripts/access_review.py` expects (listed 
 python scripts/access_review.py <data_folder> --review-date YYYY-MM-DD --out findings.csv
 ```
 
-The script checks: terminated users with access, sign-ins after termination, access beyond the role matrix, access left over from a job change, separation-of-duties conflicts, admin rights on everyday accounts, missing MFA on required groups, inactive accounts (with a grace period for new accounts), accounts with no owner, expired vendor accounts, shared logins, accounts not tied to anyone in HR, and people on leave with active access.
+The script checks: terminated users with access, sign-ins after termination, vendor accounts used after their limit, access beyond the role matrix, access left over from a job change, separation-of-duties conflicts, admin rights on everyday accounts, missing MFA on required groups, inactive accounts (with a grace period for new accounts), accounts with no owner, expired vendor accounts, shared logins, accounts not tied to anyone in HR, and people on leave with active access.
 
 It merges multiple issues on the same account into one finding and suggests a starting severity.
 

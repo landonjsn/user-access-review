@@ -2,7 +2,7 @@ Access review as of 2026-10-31: 11 findings (4 High, 4 Medium, 3 Low)
   A1 [High] a-tbrooks (Directory): No MFA while in Domain Admins
   A2 [High] avery.mills (Directory): Terminated 2026-08-15 but account still enabled; Signed in 2026-09-02, after termination  [POSSIBLE INCIDENT]
   A3 [High] marcus.reyes (Directory): In both Finance-AP and Finance-Approvers (can create and approve the same transaction)
-  A4 [High] temp.it.vendor (Directory): Vendor account with no named owner; Vendor account created 2026-02-03, past the 90-day limit; No MFA while in IT-Admins; No sign-in since 2026-05-14
+  A4 [High] temp.it.vendor (Directory): Vendor account with no named owner; Vendor account created 2026-02-03, past the 90-day limit (ended 2026-05-04); Signed in 2026-05-14, after the vendor limit ended; No MFA while in IT-Admins; No sign-in since 2026-05-14  [POSSIBLE INCIDENT]
   A5 [Medium] jasmine.ortiz (Directory): Still in Finance-AP from a previous job
   A6 [Medium] nina.patel (POS): Terminated 2026-09-30 but POS login still enabled (Supervisor rights)
   A7 [Medium] store3.register (POS): Shared login with no employee attached

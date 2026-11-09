@@ -82,9 +82,27 @@ To run the script:
 python skill/user-access-review/scripts/access_review.py data --review-date 2026-10-31 --out findings.csv
 ```
 
+## Testing the skill
+
+To test the skill, I started a fresh Claude chat, gave it only the policy and the seven exports (none of my findings), and asked it to run the review as of October 31, 2026.
+
+![Claude skill test](findings/claude_skill_test.png)
+
+It found the same 11 issues I found by hand, with the same severities, and cleared the same false alarms. I ran it twice in separate chats and got the same findings both times. It also caught a few things I missed:
+
+- **The vendor account was a second possible incident.** It was created February 3, so its 90-day limit ended May 4, but someone signed into it on May 14. The script flagged the account as too old but didn't check whether it was used after it expired. The skill caught it by checking the raw data, so the script now checks for that too.
+- **The IT Coordinator reviews his own access.** He runs the access review, including his own admin accounts, so nobody independent is checking them. It recommended having the General Manager sign off on IT's access.
+- **What the data can't show.** For example, the export only has each account's most recent sign-in, so there could have been earlier logins on the terminated employee's account.
+
+The full report is in [`findings/claude_skill_report.pdf`](findings/claude_skill_report.pdf), and the script output from that run is in [`findings/claude_skill_findings.csv`](findings/claude_skill_findings.csv).
+
 ## How I built it
 
-I used Claude to help generate the fake company data, draw the BPMN diagrams, and write the Python script. The review itself, the severity calls, and the decisions about what counts as a problem were mine, and I checked the script's results against my own findings.
+I built this with Claude, and I want to be clear about who did what.
+
+Claude wrote the Python script and the skill, generated the fake company data, and built both BPMN diagrams.
+
+I did the review by hand in Excel, working through each check and deciding what counted as a problem, with Claude walking me through it step by step. I worked out which findings came from the same broken process, reviewed both diagrams, and added physical access (keys, badges, alarm codes) to the offboarding process, since that was missing. I also tested the script and the skill against my own findings to make sure they actually worked.
 
 ## Framework mapping
 
@@ -108,6 +126,6 @@ And fixing the process ended up being more useful than fixing the accounts. Most
 ## What's in here
 
 - `data/`: the access policy and the seven exports
-- `findings/`: my manual findings log and the script's output
+- `findings/`: my manual findings log, the script's output, and the skill test (screenshot, report, and findings)
 - `process/`: the current and future state BPMN diagrams
 - `skill/user-access-review/`: the Claude skill, the Python script, a report template, and the framework mapping

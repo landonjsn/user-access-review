@@ -2,7 +2,7 @@ finding_id,account,system,what_is_wrong,policy_rule,suggested_severity,possible_
 A1,a-tbrooks,Directory,No MFA while in Domain Admins,Rule 5: MFA,High,No
 A2,avery.mills,Directory,"Terminated 2026-08-15 but account still enabled; Signed in 2026-09-02, after termination",Rule 2: Terminations,High,Yes
 A3,marcus.reyes,Directory,In both Finance-AP and Finance-Approvers (can create and approve the same transaction),Rule 9: Separation of duties,High,No
-A4,temp.it.vendor,Directory,"Vendor account with no named owner; Vendor account created 2026-02-03, past the 90-day limit; No MFA while in IT-Admins; No sign-in since 2026-05-14",Rule 8: Service and vendor accounts; Rule 5: MFA; Rule 4: Inactive accounts,High,No
+A4,temp.it.vendor,Directory,"Vendor account with no named owner; Vendor account created 2026-02-03, past the 90-day limit (ended 2026-05-04); Signed in 2026-05-14, after the vendor limit ended; No MFA while in IT-Admins; No sign-in since 2026-05-14",Rule 8: Service and vendor accounts; Rule 5: MFA; Rule 4: Inactive accounts,High,Yes
 A5,jasmine.ortiz,Directory,Still in Finance-AP from a previous job,Rule 3: Job changes,Medium,No
 A6,nina.patel,POS,Terminated 2026-09-30 but POS login still enabled (Supervisor rights),Rule 2: Terminations,Medium,No
 A7,store3.register,POS,Shared login with no employee attached,Rule 7: Shared accounts,Medium,No
