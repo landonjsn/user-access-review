@@ -70,8 +70,7 @@ After doing it all by hand, I wanted a way to run the same review again without 
 - A Python script ([access_review.py](skill/user-access-review/scripts/access_review.py)) that runs all the policy checks. I wanted the rule checks done by code so they come out exactly the same every time. On the Redbud data it found the same 11 issues I found by hand and cleared the same false alarms.
 - A Claude skill ([user-access-review](skill/user-access-review/SKILL.md)) that runs the script and then handles the parts that need judgment, like flagging logins after termination as possible incidents, telling a policy gap apart from a violation, and grouping findings by root cause. It's the same idea as my [SOC triage skill](https://github.com/landonjsn/soc-triage-skill).
 
-To run the script:
-
+If you want to rerun the review on the Redbud data yourself:
 ```
 python skill/user-access-review/scripts/access_review.py data --review-date 2026-10-31 --out findings.csv
 ```
