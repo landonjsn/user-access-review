@@ -1,69 +1,63 @@
 # User Access Review: Redbud Resale Co.
 
-This is a user access review I did for a made-up retail company. I went through their HR roster and account exports, found 11 access problems, figured out which processes were causing them, redesigned their offboarding process, and then automated the review so it can be run again.
+For this project I did a user access review on a made-up retail company. I went through their HR data and account exports, found 11 access problems, figured out what was causing them, redesigned their offboarding process, and then automated the review so it could be run again.
 
-Redbud Resale Co. isn't a real company. All the names and data are fictional.
+Redbud Resale Co. isn't real. All the names and data are fictional.
 
 ## Why I did this
 
-A lot of the GRC, IAM, and IT audit jobs I'm applying to mention access reviews: checking that terminated employees lost their access, that people only have what their job needs, and so on. I'd learned about it in class but had never actually done one, so I wanted to go through the whole thing start to finish.
+Access reviews come up in a lot of the GRC, IAM, and IT audit jobs I've been applying to. Basically you check that people who left don't still have access, that people only have what their job needs, and so on. I'd learned about it in class but had never actually done one, so I wanted to go through the whole thing myself.
 
 ## The setup
 
-Redbud has three stores and a small corporate office, about 34 employees total. Employees log in with Microsoft Entra ID accounts, and the stores use a POS system that takes card payments.
+Redbud has three stores and a small corporate office, around 34 employees. Everyone logs in with a Microsoft Entra ID account, and the stores use a POS system that takes card payments.
 
 I had seven exports as of October 31, 2026:
+
 - HR roster
 - HR job changes
-- a role matrix (what access each job is supposed to have)
+- role matrix (what access each job is supposed to have)
 - directory accounts
 - directory group memberships
 - POS users
 
-I also had their access policy, which has 10 rules about terminations, job changes, inactive accounts, MFA, shared accounts, vendor accounts, and separation of duties. It's in [`data/access_policy.md`](data/access_policy.md).
+I also had the company's access policy, which has 10 rules covering terminations, job changes, inactive accounts, MFA, shared accounts, vendor accounts, and separation of duties. It's in [data/access_policy.md](data/access_policy.md).
 
 ## What I found
 
-I did the review by hand in Excel first, checking each account against each rule. I ended up with 11 findings: 4 High, 4 Medium, 2 Low, and 1 policy gap. My full log is in [`findings/manual_findings_log.csv`](findings/manual_findings_log.csv).
+I did the review by hand in Excel first, going rule by rule and checking each account. I ended up with 11 findings: 4 High, 4 Medium, 2 Low, and 1 policy gap. My full log is in [findings/manual_findings_log.csv](findings/manual_findings_log.csv).
 
-The ones that stood out:
+The ones that stood out to me:
 
-- **A terminated employee's account was still active, and someone signed into it 18 days after she left.** At first this looked like a missed step, but a login after termination means someone actually used the account. I treated it as a possible security incident: disable it right away and find out what was accessed.
-- **The bookkeeper could create a payment and approve it himself.** That's a separation of duties problem. Even if he's trustworthy, nobody should be able to move money without a second person involved.
-- **A vendor account had admin rights, no owner, and no MFA,** and nobody had used it since May.
-- **The Domain Admins account had no MFA.**
-- **A terminated team leader's POS login was still on,** and her role could approve refunds and voids.
+- A terminated employee's account was still active, and someone signed into it 18 days after she left. At first I saw it as just another account that needed to be disabled, but a login after someone leaves means the account was actually used. So I treated it as a possible security incident: shut it off right away and find out what was accessed.
+- The bookkeeper could create a payment and approve it himself. Even if he's trustworthy, nobody should be able to move money without a second person involved.
+- A vendor account had admin rights, no owner, and no MFA, and nobody had used it since May.
+- The Domain Admins account didn't have MFA.
+- A team leader who was terminated still had her POS login turned on, and her role could approve refunds and voids.
 
-The rest: an employee who moved from accounts payable to marketing still had finance access, a sales associate had manager rights on the register, there was a shared register login, a transferred employee still had a login at his old store, and one account hadn't been used in 133 days.
+The rest were smaller: someone who moved from accounts payable to marketing still had finance access, a sales associate had manager rights on the register, there was a shared register login, someone who transferred stores still had a login at his old store, and one account hadn't been used in 133 days.
 
-The last one was an employee on leave who still had full access. That one wasn't technically a violation, because the policy doesn't say anything about leave, so I logged it as a policy gap and recommended adding a rule.
+The last one was an employee on leave who still had full access. That wasn't technically a violation, since the policy doesn't say anything about leave, so I logged it as a policy gap and recommended adding a rule for it.
 
-I also cleared a few things that looked like problems but weren't: a new hire who hadn't logged in yet (new accounts get 30 days), a service account that had a documented owner, and a terminated employee whose access had been removed correctly.
-
-| Severity | Count |
-|---|---|
-| High | 4 |
-| Medium | 4 |
-| Low | 2 |
-| Policy gap | 1 |
+I also checked a few things that looked like problems but weren't. A new hire hadn't logged in yet, but new accounts get 30 days. A service account had no employee attached, but it had a documented owner. And one terminated employee's access had been removed correctly.
 
 ## Why it happened
 
-When I grouped the findings, most of them came back to the same few problems:
+When I grouped the findings together, most of them came back to the same few problems:
 
-1. **Access doesn't get removed when people leave or change jobs.** HR records the change, but IT either never finds out or only updates the computer login and forgets about the POS system.
-2. **People get more access than their job needs,** because nobody checks against the role matrix when access is given out.
-3. **Nobody is cleaning up accounts.** Old accounts stay open, and MFA isn't enforced on the admin accounts.
+1. Access doesn't get removed when people leave or change jobs. HR records the change, but IT either never hears about it or only updates the computer login and forgets about the POS system.
+2. People get more access than their job needs, because nobody checks the role matrix when access is given out.
+3. Nobody is cleaning up accounts. Old accounts stay open and MFA isn't enforced on the admin accounts.
 
 ## Fixing the process
 
-Disabling 11 accounts would fix this review, but the same things would show up again next time. So I mapped how offboarding works now (based on what the data showed) and how it should work.
+Disabling 11 accounts would fix this review, but the same problems would just show up again next time. So I mapped out how offboarding works now, based on what the data showed, and how it should work instead.
 
-Current state. The red notes are where it breaks, and which finding showed it:
+Here's the current state. The red notes show where it breaks and which finding showed it:
 
 ![Current state offboarding](process/offboarding_current_state.png)
 
-Future state. HR updating the roster automatically creates an access ticket, IT's checklist covers every system including POS, the store manager handles keys and alarm codes, and HR confirms it's all done. If something isn't finished the same day, it gets escalated. There's also a monthly check where HR compares the roster to the account lists. I had HR do that instead of IT so IT isn't checking its own work.
+And the future state. When HR updates the roster, it automatically creates an access ticket for IT. IT's checklist covers every system, including POS. The store manager collects keys and badges and changes the alarm code. HR confirms everything got done, and anything not finished the same day gets escalated. There's also a monthly check where HR compares the roster to the account lists. I had HR do that one instead of IT so IT isn't checking its own work.
 
 ![Future state offboarding](process/offboarding_future_state.png)
 
@@ -71,10 +65,10 @@ Both diagrams are BPMN files, so you can open and edit them at [demo.bpmn.io](ht
 
 ## Automating it
 
-After doing it by hand, I wanted a way to run the same review again without starting over. There are two pieces:
+After doing it all by hand, I wanted a way to run the same review again without starting from scratch. There are two parts to it:
 
-- **A Python script** ([`access_review.py`](skill/user-access-review/scripts/access_review.py)) that runs all the policy checks. I wanted the rule checks done by code because they should come out exactly the same every time. When I ran it on the Redbud data, it found the same 11 issues I found by hand and cleared the same false alarms.
-- **A Claude skill** ([`user-access-review`](skill/user-access-review/SKILL.md)) that runs the script and then handles the parts that need judgment, like flagging logins after termination as possible incidents, telling a policy gap apart from a violation, and grouping findings by root cause. This is the same idea as my [SOC triage skill](https://github.com/landonjsn/soc-triage-skill).
+- A Python script ([access_review.py](skill/user-access-review/scripts/access_review.py)) that runs all the policy checks. I wanted the rule checks done by code so they come out exactly the same every time. On the Redbud data it found the same 11 issues I found by hand and cleared the same false alarms.
+- A Claude skill ([user-access-review](skill/user-access-review/SKILL.md)) that runs the script and then handles the parts that need judgment, like flagging logins after termination as possible incidents, telling a policy gap apart from a violation, and grouping findings by root cause. It's the same idea as my [SOC triage skill](https://github.com/landonjsn/soc-triage-skill).
 
 To run the script:
 
@@ -84,48 +78,10 @@ python skill/user-access-review/scripts/access_review.py data --review-date 2026
 
 ## Testing the skill
 
-To test the skill, I started a fresh Claude chat, gave it only the policy and the seven exports (none of my findings), and asked it to run the review as of October 31, 2026.
+To test the skill, I opened a fresh Claude chat, gave it only the policy and the seven exports (none of my findings), and asked it to run the review as of October 31, 2026.
 
 ![Claude skill test](findings/claude_skill_test.png)
 
-It found the same 11 issues I found by hand, with the same severities, and cleared the same false alarms. I ran it twice in separate chats and got the same findings both times. It also caught a few things I missed:
+It found the same 11 issues I did, with the same severities, and cleared the same false alarms. I ran it twice in separate chats and got the same results both times. It also caught a few things I missed:
 
-- **The vendor account was a second possible incident.** It was created February 3, so its 90-day limit ended May 4, but someone signed into it on May 14. The script flagged the account as too old but didn't check whether it was used after it expired. The skill caught it by checking the raw data, so the script now checks for that too.
-- **The IT Coordinator reviews his own access.** He runs the access review, including his own admin accounts, so nobody independent is checking them. It recommended having the General Manager sign off on IT's access.
-- **What the data can't show.** For example, the export only has each account's most recent sign-in, so there could have been earlier logins on the terminated employee's account.
-
-The full report is in [`findings/claude_skill_report.pdf`](findings/claude_skill_report.pdf), and the script output from that run is in [`findings/claude_skill_findings.csv`](findings/claude_skill_findings.csv).
-
-## How I built it
-
-I built this with Claude, and I want to be clear about who did what.
-
-Claude wrote the Python script and the skill, generated the fake company data, and built both BPMN diagrams.
-
-I did the review by hand in Excel, working through each check and deciding what counted as a problem, with Claude walking me through it step by step. I worked out which findings came from the same broken process, reviewed both diagrams, and added physical access (keys, badges, alarm codes) to the offboarding process, since that was missing. I also tested the script and the skill against my own findings to make sure they actually worked.
-
-## Framework mapping
-
-| Area | NIST CSF 2.0 | PCI DSS v4.0 (POS takes card payments) |
-|---|---|---|
-| Terminated users with access | PR.AA-01 | 8.2.5 |
-| Extra access, leftover access, separation of duties | PR.AA-05 | 7.2.2 |
-| No MFA on admin accounts | PR.AA-03 | 8.4.1 |
-| Shared logins | PR.AA-01 | 8.2.2 |
-| Inactive accounts | PR.AA-01 | 8.2.6 |
-| Access reviews every 6 months | PR.AA-05 | 7.2.4 |
-
-## What I took away from it
-
-The login after termination was the biggest lesson. I almost logged it as just another account to disable, but someone actually used that account after the person was gone, which is a much bigger deal.
-
-The leave-of-absence finding taught me to look at what the policy doesn't cover, not just what it does.
-
-And fixing the process ended up being more useful than fixing the accounts. Most of the 11 problems came from the same broken handoff between HR and IT.
-
-## What's in here
-
-- `data/`: the access policy and the seven exports
-- `findings/`: my manual findings log, the script's output, and the skill test (screenshot, report, and findings)
-- `process/`: the current and future state BPMN diagrams
-- `skill/user-access-review/`: the Claude skill, the Python script, a report template, and the framework mapping
+- The vendor account was actually a second possible incident. It was created February 3, so its 90-day limit ran out May 4, but someone signed into
