@@ -83,4 +83,8 @@ To test the skill, I opened a fresh Claude chat, gave it only the policy and the
 
 It found the same 11 issues I did, with the same severities, and cleared the same false alarms. I ran it twice in separate chats and got the same results both times. It also caught a few things I missed:
 
-- The vendor account was actually a second possible incident. It was created February 3, so its 90-day limit ran out May 4, but someone signed into
+- The vendor account was actually a second possible incident. It was created February 3, so its 90-day limit ran out May 4, but someone signed into it on May 14 with IT admin rights and no MFA. I had it down as an account to disable, not something to investigate. It’s a weaker signal than the terminated employee’s login, since the vendor may still have been working with Redbud that day, but nobody owned the account, so nobody could vouch for that sign-in.
+- It found gaps in the policy itself. HR isn’t on the MFA list even though HR data is sensitive, the policy doesn’t name anyone to handle incidents, and the IT Coordinator reviews everyone’s access, including his own admin rights. It suggested having someone outside IT, like the General Manager, review IT’s access.
+- It noticed that IT admin rights sit on an everyday account, because the policy’s rule about separate admin accounts only covers Domain Admins.
+
+The full report from the test is in claude_skill_report.pdf, and its findings are in claude_skill_findings.csv. My manual log is in manual_findings_log.csv if you want to compare them.
